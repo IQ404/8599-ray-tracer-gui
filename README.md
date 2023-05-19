@@ -9,7 +9,7 @@
   - [Visual Studio 2022](https://visualstudio.com)
   - [Vulkan SDK](https://vulkan.lunarg.com/sdk/home#windows)
   
-  Then, execute `scripts/Setup.bat` after <ins>recursively</ins> clone the repository, this will generate the Visual Studio 2022 solution for us.
+  Then, execute `scripts/Setup.bat` after <ins>recursively</ins> clone the repository, this will generate the Visual Studio 2022 solution for us. Note that current implementation of multithreading requires C++17 more above.
 
 ## Progression
 
@@ -1387,5 +1387,169 @@ Renderer::HitRecord Renderer::Miss_Shader(const Ray& ray)
 
 ### May 17th 2023
 
-- A step towards "non-physically photorealistic rendering" (kidding...)
+- A step towards "non-physical photorealistic rendering" (kidding...)
 
+Apart from point light diffused from the sphere directly to the camera, we now also allow rays to bounce one more time according to mirror reflection on the sphere:
+
+```cpp
+/*****************************************************************//**
+ * \file   Renderer.cpp
+ * \brief  The definitions of the renderer class for the 8599 ray tracer
+ * 
+ * \author Xiaoyang Liu
+ * \date   May 2023
+ *********************************************************************/
+
+#include "Renderer.h"
+
+namespace RTUtility
+{
+	uint32_t vecRGBA_to_0xABGR(const glm::vec4& colorRGBA)
+	{
+		uint8_t r = (uint8_t)(colorRGBA.r * 255.0f);
+		uint8_t g = (uint8_t)(colorRGBA.g * 255.0f);
+		uint8_t b = (uint8_t)(colorRGBA.b * 255.0f);
+		uint8_t a = (uint8_t)(colorRGBA.a * 255.0f);
+
+		return ((a << 24) | (b << 16) | (g << 8) | r);	// this automatically promotes 8 bits memory to 32 bits memory
+	}
+}
+
+void Renderer::ResizeViewport(uint32_t width, uint32_t height)
+{
+	if (frame_image_final)
+	{
+		if ((frame_image_final->GetWidth() == width) && (frame_image_final->GetHeight() == height))
+		{
+			return;
+		}
+		frame_image_final->Resize(width, height);
+	}
+	else
+	{
+		frame_image_final = std::make_shared<Walnut::Image>(width, height, Walnut::ImageFormat::RGBA);
+	}
+	delete[] frame_data;
+	frame_data = new uint32_t[width * height];
+}
+
+void Renderer::Render(const Scene& scene, const Camera& camera)
+{
+	active_scene = &scene;
+	active_camera = &camera;
+	
+	for (uint32_t y = 0; y < frame_image_final->GetHeight(); y++)		// each column
+	{
+		for (uint32_t x = 0; x < frame_image_final->GetWidth(); x++)		// each row
+		{
+			RayGen_Shader(x, y);
+		}
+	}
+
+	frame_image_final->SetData(frame_data);	// send the frame data to GPU
+}
+
+void Renderer::RayGen_Shader(uint32_t x, uint32_t y)
+{
+	glm::vec3 final_color(0.0f);
+
+	Ray ray;
+	ray.origin = active_camera->Position();
+	ray.direction = active_camera->RayDirections()[y * frame_image_final->GetWidth() + x];
+	
+	int bounces = 2;
+	float energy_remaining = 1.0f;
+	glm::vec3 sky_color{ 0.0f,0.0f,0.0f };
+	for (int i = 0; i < bounces; i++)
+	{
+		Renderer::HitRecord hit_record = Intersection_Shader(ray);
+
+		if (hit_record.hit_Distance == -1.0f)
+		{
+			final_color += sky_color * energy_remaining;
+			break;
+		}
+		else
+		{
+			glm::vec3 lightDirection = glm::normalize(glm::vec3{ -1.0,-1.0,-1.0 });
+			float diffuseIntensity = glm::max(glm::dot(hit_record.hit_WorldNormal, -lightDirection), 0.0f);
+			final_color += energy_remaining * active_scene->spheres[hit_record.hit_ObjectIndex].albedo * diffuseIntensity;	// light source emits white light
+			energy_remaining *= 0.7f;
+			ray.origin = hit_record.hit_WorldPosition + hit_record.hit_WorldNormal * 0.0001f;	// shadow acne elimination
+			ray.direction = glm::reflect(ray.direction, hit_record.hit_WorldNormal);
+		}
+	}
+
+	glm::vec4 final_color_RGBA = glm::clamp(glm::vec4{ final_color,1.0f }, glm::vec4(0.0f), glm::vec4(1.0f));	// glm::clamp(value, min, max)
+
+	frame_data[(y * frame_image_final->GetWidth()) + x] = RTUtility::vecRGBA_to_0xABGR(final_color_RGBA);
+}
+
+Renderer::HitRecord Renderer::Intersection_Shader(const Ray& ray)
+{
+	float closestT = std::numeric_limits<float>::max();
+	int closest_sphere_index = -1;
+	for (size_t index = 0; index < active_scene->spheres.size(); index++)
+	{
+		const Sphere& sphere = active_scene->spheres[index];
+		glm::vec3 transformed_origin = ray.origin - sphere.center;	// Do the equivalent movement on camera rather than on sphere
+
+		float a = glm::dot(ray.direction, ray.direction);
+		float b = 2.0f * glm::dot(transformed_origin, ray.direction);
+		float c = glm::dot(transformed_origin, transformed_origin) - sphere.radius * sphere.radius;
+		float discriminant = b * b - 4 * a * c;
+
+		if (discriminant < 0.0f)
+		{
+			continue;
+		}
+
+		float closerT = (-b - glm::sqrt(discriminant)) / (2.0f * a);
+		if (closerT > 0.0f && closerT < closestT)	// note that here we are coding it so that when we are inside a sphere, that sphere will NOT be rendered.
+		{
+			closestT = closerT;
+			closest_sphere_index = (int)index;
+		}
+	}
+	if (closest_sphere_index == -1)
+	{
+		return Miss_Shader(ray);
+	}
+	return ClosestHit_Shader(ray, closestT, closest_sphere_index);
+}
+
+Renderer::HitRecord Renderer::ClosestHit_Shader(const Ray& ray, float hit_Distance, int hit_ObjectIndex)
+{
+	Renderer::HitRecord hit_record;
+	hit_record.hit_Distance = hit_Distance;
+	hit_record.hit_ObjectIndex = hit_ObjectIndex;
+	
+	const Sphere& closest_sphere = active_scene->spheres[hit_ObjectIndex];
+	
+	glm::vec3 transformed_origin = ray.origin - closest_sphere.center;	// Do the equivalent movement on camera rather than on sphere
+	glm::vec3 transformed_hit_point = transformed_origin + ray.direction * hit_Distance;
+
+	hit_record.hit_WorldNormal = glm::normalize(transformed_hit_point);
+	hit_record.hit_WorldPosition = transformed_hit_point + closest_sphere.center;
+
+	return hit_record;
+}
+
+Renderer::HitRecord Renderer::Miss_Shader(const Ray& ray)
+{
+	Renderer::HitRecord hit_record;
+	hit_record.hit_Distance = -1.0f;
+	return hit_record;
+}
+```
+
+This results in the following effect: (note that this is not physically correct!)
+
+<img src="https://github.com/IQ404/8599-ray-tracer-with-walnut-gui/blob/master/SampleImages/reflection_between_two_spheres.jpg" width="700" height="400"></a>
+
+### May 18-19th 2023
+
+- Separate material from geometry.
+- Add roughness to reflection.
+- Implement temporal accumulation sampling.
+- Apply multithreading.
