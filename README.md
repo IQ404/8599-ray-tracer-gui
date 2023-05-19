@@ -581,7 +581,7 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 
 The resulting GUI is as follows:
 
-<img src="https://github.com/IQ404/8599-ray-tracer-with-walnut-gui/blob/master/SampleImages/basic_lighting.jpg" width="700" height="400"></a>
+<img src="https://github.com/IQ404/8599-ray-tracer-gui/blob/main/SampleImages/basic_lighting.jpg" width="700" height="400"></a>
 
 ### May 15th 2023
 
@@ -1180,7 +1180,7 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 
 so that the current output is like follows:
 
-<img src="https://github.com/IQ404/8599-ray-tracer-with-walnut-gui/blob/master/SampleImages/two_spheres.jpg" width="700" height="400"></a>
+<img src="https://github.com/IQ404/8599-ray-tracer-gui/blob/main/SampleImages/two_spheres.jpg" width="700" height="400"></a>
 
 ### May 16th 2023
 
@@ -1545,7 +1545,7 @@ Renderer::HitRecord Renderer::Miss_Shader(const Ray& ray)
 
 This results in the following effect: (note that this is not physically correct!)
 
-<img src="https://github.com/IQ404/8599-ray-tracer-with-walnut-gui/blob/master/SampleImages/reflection_between_two_spheres.jpg" width="700" height="400"></a>
+<img src="https://github.com/IQ404/8599-ray-tracer-gui/blob/main/SampleImages/reflection_between_two_spheres.jpg" width="700" height="400"></a>
 
 ### May 18-19th 2023
 
