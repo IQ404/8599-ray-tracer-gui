@@ -1554,7 +1554,7 @@ This results in the following effect: (note that this is not physically correct!
 - Implement temporal accumulation sampling.
 - Apply multithreading.
 
-The framework of our ray-tracing GUI is more or less finished by far. The code up to this point is saved into [this branch]().
+The framework of our ray-tracing GUI is more or less finished by far. The code up to this point is saved into [this branch](https://github.com/IQ404/8599-ray-tracer-gui/tree/initial_framework).
 
 ### May 20th 2023
 
