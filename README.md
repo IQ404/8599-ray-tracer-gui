@@ -1553,3 +1553,17 @@ This results in the following effect: (note that this is not physically correct!
 - Add roughness to reflection.
 - Implement temporal accumulation sampling.
 - Apply multithreading.
+
+The framework of our ray-tracing GUI is more or less finished by far. The code up to this point is saved into [this branch]().
+
+### May 20th 2023
+
+I was playing games on this day.
+
+### May 21st 2023
+
+I was travelled to Durham on this day.
+
+### May 22nd 2023
+
+I decided to relearn / learn more about ray-tracing before I proceed, 
