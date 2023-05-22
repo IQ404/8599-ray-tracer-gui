@@ -2,7 +2,7 @@
 
 ## Housekeeping
 
-- For more information of the 8599 Ray Tracer, please see the [main branch](https://github.com/IQ404/8599-ray-tracer-gui/tree/main).
+- For more information about the 8599 Ray Tracer, please see the [main branch](https://github.com/IQ404/8599-ray-tracer-gui/tree/main).
 
 ## Progression for May 12-19th 2023
 
