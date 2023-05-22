@@ -1,17 +1,10 @@
-# 8599 Ray Tracer Integrated with Walnut GUI
+# The initial framework for the 8599 Ray Tracer GUI
 
 ## Housekeeping
 
-- To just use the application, run the executable (which I will distribute after I have finished implementing this software ray tracer).
+- For more information of the 8599 Ray Tracer, please see the [main branch](https://github.com/IQ404/8599-ray-tracer-gui/tree/main).
 
-- To run from the source code, we need:
-
-  - [Visual Studio 2022](https://visualstudio.com)
-  - [Vulkan SDK](https://vulkan.lunarg.com/sdk/home#windows)
-  
-  Then, execute `scripts/Setup.bat` after <ins>recursively</ins> clone the repository, this will generate the Visual Studio 2022 solution for us. Note that current implementation of multithreading requires C++17 more above.
-
-## Progression
+## Progression for May 12-19th 2023
 
 ### May 12th 2023
 
