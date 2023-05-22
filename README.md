@@ -13,7 +13,7 @@
 
 ## Progression
 
-For progression from May 12-19th 2023 where the [initial framework of the GUI](https://github.com/IQ404/8599-ray-tracer-gui/tree/initial_framework) was established, please see [here](https://github.com/IQ404/8599-ray-tracer-gui/blob/initial_framework/README.md).
+- For progression from May 12-19th 2023 where the [initial framework of the GUI](https://github.com/IQ404/8599-ray-tracer-gui/tree/initial_framework) was established, please see [here](https://github.com/IQ404/8599-ray-tracer-gui/blob/initial_framework/README.md).
 
 ### May 20th 2023
 
@@ -25,4 +25,6 @@ I was travelled to Durham on this day.
 
 ### May 22nd 2023
 
-I decided to relearn / learn more about ray-tracing before I proceed, 
+I decided to relearn / learn more about ray-tracing before I proceed to merge my offline ray tracer with this GUI framework.
+
+[Here]() are the notes I took during the relearning.
