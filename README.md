@@ -27,4 +27,4 @@ I was travelled to Durham on this day.
 
 I decided to relearn / learn more about ray-tracing before I proceed to merge my offline ray tracer with this GUI framework.
 
-[Here]() are the notes I took during the relearning.
+[Here](https://github.com/IQ404/Notes/tree/ray_tracing) are the notes I took during the relearning.
