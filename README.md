@@ -25,6 +25,6 @@ I was travelled to Durham on this day.
 
 ### May 22-26th 2023
 
-To have an optimized ray tracer, I decided to relearn / learn more about ray-tracing and then add more logic to my offline ray tracer before I proceed to merge it with this GUI framework. More specifically, I am learning radiometry and path tracing during those days.
+To have an optimized ray tracer, I decided to relearn / learn more about ray-tracing and then add more logic to my offline ray tracer before I proceed to merge it with this GUI framework. More specifically, I am learning radiometry, rendering equation, global illumination and Monte Carlo path tracing during those days.
 
 [Here](https://github.com/IQ404/Notes/tree/ray_tracing) are the notes I took during the relearning.
