@@ -25,4 +25,4 @@ I was travelled to Durham on this day.
 
 ### May 22-28th 2023
 
-To have an optimized ray tracer, I decided to relearn / learn more about the theory behind ray-tracing and then add more logic to my offline ray tracer before I proceed to merge it with this GUI framework. More specifically, I am learning radiometry, rendering equation, global illumination, Monte Carlo path tracing and BSDF/BRDF/BTDF during those days.
+To have an optimized ray tracer, I decided to relearn / learn more about the theory behind ray-tracing and then add more logic to my offline ray tracer before I proceed to merge it with this GUI framework. More specifically, I am learning radiometry, rendering equation, global illumination, Monte Carlo path tracing, BSDF/BRDF/BTDF/BSSRDF and microfacet models during those days.
