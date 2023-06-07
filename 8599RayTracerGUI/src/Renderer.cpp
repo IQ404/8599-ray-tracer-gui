@@ -7,6 +7,9 @@
  *********************************************************************/
 
 #include "Renderer.h"
+//#include "WhittedRenderer.h"
+#include "Sphere.h"
+#include "TriangleMesh.h"
 
 namespace RTUtility
 {
@@ -19,6 +22,31 @@ namespace RTUtility
 
 		return ((a << 24) | (b << 16) | (g << 8) | r);	// this automatically promotes 8 bits memory to 32 bits memory
 	}
+}
+
+Renderer::Renderer()
+{
+	auto sph1 = std::make_unique<Whitted::Sphere>(glm::vec3(-1, 0, -12), 2);
+	sph1->material_nature = Whitted::Diffuse_Glossy;
+	sph1->diffuse_color = glm::vec3(0.6, 0.7, 0.8);
+
+	auto sph2 = std::make_unique<Whitted::Sphere>(glm::vec3(0.5, -0.5, -8), 1.5);
+	sph2->refractive_index = 1.5;
+	sph2->material_nature = Whitted::Reflective_Refractive;
+
+	world.Add(std::move(sph1));
+	world.Add(std::move(sph2));
+
+	glm::vec3 verts[4] = { {-5,-3,-6}, {5,-3,-6}, {5,-3,-16}, {-5,-3,-16} };
+	uint32_t vertIndex[6] = { 0, 1, 3, 1, 2, 3 };
+	glm::vec2 st[4] = { {0, 0}, {1, 0}, {1, 1}, {0, 1} };
+	auto mesh = std::make_unique<Whitted::TriangleMesh>(verts, vertIndex, 2, st);
+	// Note: currently I don't want geometry that isn't closed (i.e. does not have an interior) to be reflective/refractive
+	mesh->material_nature = Whitted::Diffuse_Glossy;
+
+	world.Add(std::move(mesh));
+	world.Add(std::make_unique<Whitted::PointLightSource>(glm::vec3(-20.0f, 70.0f, 20.0f), glm::vec3(0.5f)));
+	world.Add(std::make_unique<Whitted::PointLightSource>(glm::vec3(30.0f, 50.0f, -12.0f), glm::vec3(0.5f)));
 }
 
 void Renderer::ResizeViewport(uint32_t width, uint32_t height)
@@ -91,36 +119,38 @@ void Renderer::RayGen_Shader(uint32_t x, uint32_t y)
 {
 	glm::vec3 color_rgb(0.0f);
 
-	Ray ray;
+	/*Ray ray;
 	ray.origin = active_camera->Position();
-	ray.direction = active_camera->RayDirections()[y * frame_image_final->GetWidth() + x];
+	ray.direction = active_camera->RayDirections()[y * frame_image_final->GetWidth() + x];*/
+
+	color_rgb = Whitted::WhittedRayTracer::cast_Whitted_ray(active_camera->Position(), active_camera->RayDirections()[y * frame_image_final->GetWidth() + x], world, 0);
 	
-	int bounces = 5;
-	float energy_remaining = 1.0f;
-	glm::vec3 sky_color{ 0.6f,0.7f,0.9f };
-	glm::vec3 light_direction = glm::normalize(glm::vec3{ -1.0,-1.0,-1.0 });
-	for (int i = 0; i < bounces; i++)
-	{
-		Renderer::HitRecord hit_record = Intersection_Shader(ray);
+	//int bounces = 5;
+	//float energy_remaining = 1.0f;
+	//glm::vec3 sky_color{ 0.6f,0.7f,0.9f };
+	//glm::vec3 light_direction = glm::normalize(glm::vec3{ -1.0,-1.0,-1.0 });
+	//for (int i = 0; i < bounces; i++)
+	//{
+	//	Renderer::HitRecord hit_record = Intersection_Shader(ray);
 
-		if (hit_record.hit_Distance == -1.0f)
-		{
-			color_rgb += sky_color * energy_remaining;
-			break;
-		}
-		else
-		{
-			const Sphere& sphere = active_scene->spheres[hit_record.hit_ObjectIndex];
-			const Material& material = active_scene->materials[sphere.material_index];
-			float diffuseIntensity = glm::max(glm::dot(hit_record.hit_WorldNormal, -light_direction), 0.0f);
-			color_rgb += energy_remaining * material.albedo * diffuseIntensity;	// light source emits white light
+	//	if (hit_record.hit_Distance == -1.0f)
+	//	{
+	//		color_rgb += sky_color * energy_remaining;
+	//		break;
+	//	}
+	//	else
+	//	{
+	//		const Sphere& sphere = active_scene->spheres[hit_record.hit_ObjectIndex];
+	//		const Material& material = active_scene->materials[sphere.material_index];
+	//		float diffuseIntensity = glm::max(glm::dot(hit_record.hit_WorldNormal, -light_direction), 0.0f);
+	//		color_rgb += energy_remaining * material.albedo * diffuseIntensity;	// light source emits white light
 
-			energy_remaining *= 0.5f;
-			
-			ray.origin = hit_record.hit_WorldPosition + hit_record.hit_WorldNormal * 0.0001f;	// shadow acne elimination
-			ray.direction = glm::reflect(ray.direction, hit_record.hit_WorldNormal + material.roughness * Walnut::Random::Vec3(-0.5f, 0.5f));
-		}
-	}
+	//		energy_remaining *= 0.5f;
+	//		
+	//		ray.origin = hit_record.hit_WorldPosition + hit_record.hit_WorldNormal * 0.0001f;	// shadow acne elimination
+	//		ray.direction = glm::reflect(ray.direction, hit_record.hit_WorldNormal + material.roughness * Walnut::Random::Vec3(-0.5f, 0.5f));
+	//	}
+	//}
 
 	glm::vec4 color_rgba{ color_rgb,1.0f };
 	temporal_accumulation_frame_data[y * frame_image_final->GetWidth() + x] += color_rgba;
