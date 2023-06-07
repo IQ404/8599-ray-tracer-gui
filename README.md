@@ -31,4 +31,8 @@ To have an optimized ray tracer, I decided to relearn / learn more about the the
 
 ### May 31st - June 6th 2023
 
-Implementing the Whitted Style ray tracing in the GUI renderer framework, please see [this branch](https://github.com/IQ404/8599-ray-tracer-gui/tree/whitted).
+Implementing the Whitted Style ray tracing in the GUI renderer framework. The sample video is as follows:
+
+<img src="https://github.com/IQ404/8599-ray-tracer-gui/blob/whitted/SampleImages/WhittedStyle.gif"></a>
+
+For source code, please see [this branch](https://github.com/IQ404/8599-ray-tracer-gui/tree/whitted).
