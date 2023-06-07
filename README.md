@@ -13,7 +13,9 @@
 
 ## Progression
 
-- For progression from May 12-19th 2023 where the [initial framework of the GUI](https://github.com/IQ404/8599-ray-tracer-gui/tree/initial_framework) was established, please see [here](https://github.com/IQ404/8599-ray-tracer-gui/blob/initial_framework/README.md).
+### May 12-19th 2023
+
+Constructing the [initial framework of the GUI](https://github.com/IQ404/8599-ray-tracer-gui/tree/initial_framework).
 
 ### May 20th 2023
 
@@ -27,4 +29,6 @@ I was travelled to Durham on this day.
 
 To have an optimized ray tracer, I decided to relearn / learn more about the theory behind ray-tracing and then add more logic to my offline ray tracer before I proceed to merge it with this GUI framework. More specifically, I am learning radiometry, rendering equation, global illumination, Monte Carlo path tracing, BSDF/BRDF/BTDF/BSSRDF and microfacet models during those days.
 
-- For progression from May 31st 2023 onwards where I am currently implementing the Whitted Style ray tracing in the GUI renderer framework, please see [this branch](https://github.com/IQ404/8599-ray-tracer-gui/tree/whitted).
+### May 31st - June 6th 2023
+
+Implementing the Whitted Style ray tracing in the GUI renderer framework, please see [this branch](https://github.com/IQ404/8599-ray-tracer-gui/tree/whitted).
