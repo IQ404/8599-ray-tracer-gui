@@ -179,7 +179,7 @@ public:
 			real_time = true;
 		}
 
-		//ImGui::Checkbox("Temporal Accumulation", &renderer.GetSettings().accumulating);
+		ImGui::Checkbox("Temporal Accumulation", &renderer.GetSettings().accumulating);
 
 		if (ImGui::Button("Denoise"))
 		{

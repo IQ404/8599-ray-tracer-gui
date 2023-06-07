@@ -119,6 +119,7 @@ void Camera::RecomputeRayDirections()
 	{
 		for (uint32_t x = 0; x < viewport_width; x++)		// each row
 		{
+			//glm::vec2 coordinate{ (x + 0.5f) / viewport_width, (y + 0.5f) / viewport_height };		// center of the pixel
 			glm::vec2 coordinate{ (float)x / viewport_width, (float)y / viewport_height };		// bottom-left corner of the pixel
 			coordinate = coordinate * 2.0f - 1.0f;		// normalize to [-1,1)^2
 			

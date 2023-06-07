@@ -203,7 +203,7 @@ namespace Whitted
 					glm::vec3 refracted_ray_color = cast_Whitted_ray(refracted_ray_origin, refracted_ray_direction, world, has_already_bounced + 1);
 
 					float reflectance = Whitted::accurate_fresnel_reflectance(ray_direction, normal_at_intersection, payload->entity_hitted->refractive_index);
-					// !!! Note that here we use reciprocity of light (in which I will be really happy if we can find an asymmetry to break it and thus publish a Siggraph :) ):
+					// !!! Note that here we use reciprocity of light (I will be really happy if we can find an asymmetry to break it and then publish a Siggraph :) ):
 					ray_color = reflectance * reflected_ray_color + (1.0f - reflectance) * refracted_ray_color;
 					break;
 				}
