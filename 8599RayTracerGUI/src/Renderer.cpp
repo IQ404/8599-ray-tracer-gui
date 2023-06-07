@@ -123,8 +123,6 @@ void Renderer::RayGen_Shader(uint32_t x, uint32_t y)
 	ray.origin = active_camera->Position();
 	ray.direction = active_camera->RayDirections()[y * frame_image_final->GetWidth() + x];*/
 
-	color_rgb = Whitted::WhittedRayTracer::cast_Whitted_ray(active_camera->Position(), active_camera->RayDirections()[y * frame_image_final->GetWidth() + x], world, 0);
-	
 	//int bounces = 5;
 	//float energy_remaining = 1.0f;
 	//glm::vec3 sky_color{ 0.6f,0.7f,0.9f };
@@ -152,7 +150,7 @@ void Renderer::RayGen_Shader(uint32_t x, uint32_t y)
 	//	}
 	//}
 
-	glm::vec4 color_rgba{ color_rgb,1.0f };
+	glm::vec4 color_rgba{ Whitted::WhittedRayTracer::cast_Whitted_ray(active_camera->Position(), Whitted::normalize(active_camera->RayDirections()[y * frame_image_final->GetWidth() + x]), world, 0),1.0f };
 	temporal_accumulation_frame_data[y * frame_image_final->GetWidth() + x] += color_rgba;
 	glm::vec4 final_color_RGBA = temporal_accumulation_frame_data[y * frame_image_final->GetWidth() + x] / (float)frame_accumulating;
 	final_color_RGBA = glm::clamp(final_color_RGBA, glm::vec4(0.0f), glm::vec4(1.0f));	// glm::clamp(value, min, max)

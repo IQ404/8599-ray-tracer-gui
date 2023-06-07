@@ -125,7 +125,6 @@ void Camera::RecomputeRayDirections()
 			// Get the ray direction in world space (from the camera to the pixel on the near clip plane of the perspective projection):
 			glm::vec4 target{ inverse_projection_matrix * glm::vec4{coordinate.x, coordinate.y, 1, 1} };
 			glm::vec3 ray_direction{ glm::vec3{inverse_view_matrix * glm::vec4{glm::normalize(glm::vec3{target} / target.w),0}} };
-
 			ray_directions[y * viewport_width + x] = ray_direction;
 		}
 	}
