@@ -29,7 +29,7 @@ I was travelled to Durham on this day.
 
 To have an optimized ray tracer, I decided to relearn / learn more about the theory behind ray-tracing and then add more logic to my offline ray tracer before I proceed to merge it with this GUI framework. More specifically, I am learning radiometry, rendering equation, global illumination, Monte Carlo path tracing, BSDF/BRDF/BTDF/BSSRDF and microfacet models during those days.
 
-### May 31st - June 6th 2023
+### May 31st - June 7th 2023
 
 Implementing the Whitted Style ray tracing in the GUI renderer framework. The sample video is as follows:
 
