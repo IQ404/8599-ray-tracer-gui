@@ -42,3 +42,7 @@ For source code, please see [this branch](https://github.com/IQ404/8599-ray-trac
 Before I move to physically-based path tracing, I would like to add acceleration structures into the ray tracer, and use it to render a Stanford bunny!
 
 The source code will be pushed to [this branch](https://github.com/IQ404/8599-ray-tracer-gui/tree/stanford_bunny).
+
+### ??? - June 23rd 2023
+
+I will be writing an interim report on what I have done so far for the module (CSC8599).
