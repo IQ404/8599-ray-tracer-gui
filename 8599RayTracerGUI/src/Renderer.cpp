@@ -26,25 +26,24 @@ namespace RTUtility
 
 Renderer::Renderer()
 {
-	auto sph1 = std::make_unique<Whitted::Sphere>(glm::vec3(-1, 0, -12), 2);
-	sph1->material_nature = Whitted::Diffuse_Glossy;
-	sph1->diffuse_color = glm::vec3(0.6, 0.7, 0.8);
+	auto diffuse_sphere = std::make_unique<Whitted::Sphere>(glm::vec3(-1, 0, -12), 2.0f);
+	diffuse_sphere->material_nature = Whitted::Diffuse_Glossy;
+	diffuse_sphere->diffuse_color = glm::vec3(0.6, 0.7, 0.8);
+	world.Add(std::move(diffuse_sphere));
 
-	auto sph2 = std::make_unique<Whitted::Sphere>(glm::vec3(0.5, -0.5, -8), 1.5);
-	sph2->refractive_index = 1.5;
-	sph2->material_nature = Whitted::Reflective_Refractive;
+	auto glass_sphere = std::make_unique<Whitted::Sphere>(glm::vec3(0.5, -0.5, -8), 1.5f);
+	glass_sphere->material_nature = Whitted::Reflective_Refractive;
+	glass_sphere->refractive_index = 1.5;
+	world.Add(std::move(glass_sphere));
 
-	world.Add(std::move(sph1));
-	world.Add(std::move(sph2));
-
-	glm::vec3 verts[4] = { {-5,-3,-6}, {5,-3,-6}, {5,-3,-16}, {-5,-3,-16} };
-	uint32_t vertIndex[6] = { 0, 1, 3, 1, 2, 3 };
-	glm::vec2 st[4] = { {0, 0}, {1, 0}, {1, 1}, {0, 1} };
-	auto mesh = std::make_unique<Whitted::TriangleMesh>(verts, vertIndex, 2, st);
+	glm::vec3 vertices[4] = { {-5,-3,-6}, {5,-3,-6}, {5,-3,-16}, {-5,-3,-16} };
+	uint32_t verticesIndices[6] = { 0, 1, 3, 1, 2, 3 };
+	glm::vec2 texture_coordinates[4] = { {0, 0}, {1, 0}, {1, 1}, {0, 1} };
+	auto chessboard = std::make_unique<Whitted::TriangleMesh>(vertices, verticesIndices, 2, texture_coordinates);
 	// Note: currently I don't want geometry that isn't closed (i.e. does not have an interior) to be reflective/refractive
-	mesh->material_nature = Whitted::Diffuse_Glossy;
+	chessboard->material_nature = Whitted::Diffuse_Glossy;
+	world.Add(std::move(chessboard));
 
-	world.Add(std::move(mesh));
 	world.Add(std::make_unique<Whitted::PointLightSource>(glm::vec3(-20.0f, 70.0f, 20.0f), glm::vec3(0.5f)));
 	world.Add(std::make_unique<Whitted::PointLightSource>(glm::vec3(30.0f, 50.0f, -12.0f), glm::vec3(0.5f)));
 }
