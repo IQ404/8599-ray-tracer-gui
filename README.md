@@ -37,12 +37,12 @@ Implementing the Whitted Style ray tracing in the GUI renderer framework. The sa
 
 For source code, please see [this branch](https://github.com/IQ404/8599-ray-tracer-gui/tree/whitted).
 
-### June 8th - June 16th 2023
+### June 8th - 16th 2023
 
 Before I move to physically-based path tracing, I would like to add acceleration structures into the ray tracer, and use it to render a Stanford bunny!
 
 The source code will be pushed to [this branch](https://github.com/IQ404/8599-ray-tracer-gui/tree/stanford_bunny).
 
-### ??? - June 23rd 2023
+### June 17th - 23rd 2023
 
 I will be writing an interim report on what I have done so far for the module (CSC8599).
