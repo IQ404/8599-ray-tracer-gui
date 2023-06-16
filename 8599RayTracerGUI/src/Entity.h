@@ -11,6 +11,8 @@
 
 #include "WhittedUtilities.h"
 #include "VectorFloat.h"
+#include "BoundingVolume.h"
+#include "IntersectionRecord.h"
 
 namespace Whitted
 {
@@ -22,20 +24,26 @@ namespace Whitted
 
 		}
 
-		virtual ~Entity() = default;
-
-		virtual glm::vec3 GetDiffuseColor(const glm::vec2& texture_coordinates) const
+		virtual ~Entity()
 		{
-			return diffuse_color;
+
 		}
 
-		virtual bool Intersect(
-			const glm::vec3& light_origin, 
-			const glm::vec3& light_direction, 
-			float& closerT,
-			uint32_t& triangle_index, 
-			glm::vec2& barycentric_coordinates
-		) const = 0;
+		virtual AccelerationStructure::AABB_3D Get3DAABB() = 0;
+
+		virtual glm::vec3 GetDiffuseColor(const glm::vec2& texture_coordinates = glm::vec2{ 0.0f,0.0f }) const = 0;
+
+		virtual bool Intersect(const AccelerationStructure::Ray& ray)
+		{
+			return true;
+		}
+
+		virtual bool Intersect(const AccelerationStructure::Ray& ray, float& t_intersection, uint32_t& triangle_index) const
+		{
+			return false;
+		}
+
+		virtual IntersectionRecord GetIntersectionRecord(AccelerationStructure::Ray ray) = 0;
 
 		virtual void GetHitInfo(
 			const glm::vec3& intersection, 
@@ -47,13 +55,7 @@ namespace Whitted
 		) const = 0;
 
 	public:
-		MaterialNature material_nature{ Diffuse_Glossy };
-		float refractive_index{ 1.3f };
-		float phong_diffuse{ 0.8f };
-		float phong_specular{ 0.2f };
-		glm::vec3 diffuse_color{0.2f, 0.2f, 0.2f};
-		float specular_size_factor{ 25.0f };	// The larger this factor is, the SMALLER the specular size will be.
-												// Because this will be used as an exponent.
+		// Currently NO data member for this class
 	};
 }
 

@@ -9,7 +9,6 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
-#include "VectorFloat.h"
 #include "Entity.h"
 
 namespace Whitted
@@ -18,44 +17,19 @@ namespace Whitted
 	{
 	public:
 		Sphere(const glm::vec3& center, const float& radius)
-			: m_center{ center }, m_radius{ radius }, radius_squared{ radius * radius }
+			: m_center{ center }, m_radius{ radius }, radius_squared{ radius * radius }, material{ new WhittedMaterial() }
 		{
 
 		}
 
-		virtual bool Intersect(
-			const glm::vec3& light_origin,
-			const glm::vec3& light_direction,
-			float& closerT,
-			uint32_t&,
-			glm::vec2&
-		) const override
+		virtual glm::vec3 GetDiffuseColor(const glm::vec2&) const override
 		{
-			float t_small;
-			float t_large;
-			glm::vec3 center_to_light_origin = light_origin - m_center;
-			
-			if (!QuadraticFormula(
-				glm::dot(light_direction, light_direction),
-				2 * glm::dot(light_direction, center_to_light_origin),
-				glm::dot(center_to_light_origin, center_to_light_origin) - radius_squared,
-				t_small,
-				t_large)
-				)
-			{
-				return false;
-			}
+			return material->GetDiffuseColor();
+		}
 
-			if (t_small < 0.0f)
-			{
-				t_small = t_large;
-			}
-			if (t_small < 0.0f)
-			{
-				return false;
-			}
-			closerT = t_small;
-			return true;
+		virtual AccelerationStructure::AABB_3D Get3DAABB() override
+		{
+			return AccelerationStructure::AABB_3D{m_center + m_radius, m_center - m_radius };
 		}
 
 		virtual void GetHitInfo(
@@ -70,8 +44,45 @@ namespace Whitted
 			surface_normal = Whitted::normalize(intersection - m_center);
 		}
 
+		virtual IntersectionRecord GetIntersectionRecord(AccelerationStructure::Ray ray) override
+		{
+			IntersectionRecord record;		// default-initialized to "has_intersection = false"
+			float t_small;
+			float t_large;
+			glm::vec3 center_to_light_origin = ray.m_origin - m_center;
+
+			if (!QuadraticFormula(
+				glm::dot(ray.m_direction, ray.m_direction),
+				2 * glm::dot(ray.m_direction, center_to_light_origin),
+				glm::dot(center_to_light_origin, center_to_light_origin) - radius_squared,
+				t_small,
+				t_large)
+				)
+			{
+				return record;
+			}
+
+			if (t_small < 0.0f)
+			{
+				t_small = t_large;
+			}
+			if (t_small < 0.0f)
+			{
+				return record;
+			}
+
+			record.has_intersection = true;
+			record.t = t_small;
+			record.hitted_entity = this;
+			record.location = ray(t_small);
+			record.hitted_entity_material = material;
+			record.surface_normal = Whitted::normalize(record.location - m_center);
+
+			return record;
+		}
 
 	private:
+		WhittedMaterial* material;
 		glm::vec3 m_center;
 		float m_radius;
 		float radius_squared;	// to reduce computation when calculating intersections

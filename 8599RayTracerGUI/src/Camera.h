@@ -15,7 +15,8 @@
 class Camera
 {
 // Member variables:
-	glm::vec3 position{ 0.0f,0.0f,6.0f };
+	//glm::vec3 position{ 0.0f,0.0f,6.0f };
+	glm::vec3 position{ -1, 5, 10 };
 	glm::vec3 forward_direction{ 0.0f,0.0f,-1.0f };
 	glm::vec3 up_direction{ 0.0f,1.0f,0.0f };
 

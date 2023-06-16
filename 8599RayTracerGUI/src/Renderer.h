@@ -19,6 +19,8 @@
 #include "Ray.h"
 #include "Scene.h"
 
+#include "World.h"
+
 class Renderer
 {
 public:		// structs
@@ -30,7 +32,8 @@ public:		// structs
 
 public:		// methods
 
-	Renderer() = default;	// Defaulted default constructor: the compiler will define the implicit default constructor even if other constructors are present.
+	//Renderer() = default;	// Defaulted default constructor: the compiler will define the implicit default constructor even if other constructors are present.
+	Renderer();
 
 	void ResizeViewport(uint32_t width, uint32_t height);
 	void Render(const Scene& scene, const Camera& camera);
@@ -78,6 +81,8 @@ private:	// members
 	uint32_t frame_accumulating = 1;	// the index (starting from 1) of the current frame that is being accumulated into the temporal_accumulation_frame_data buffer
 	const Scene* active_scene = nullptr;
 	const Camera* active_camera = nullptr;
+
+	Whitted::World world{1280, 960};
 };
 
 #endif // !RENDERER_H

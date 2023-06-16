@@ -14,79 +14,12 @@
 #include "Camera.h"
 #include "Renderer.h"
 
-//float tr_accurate_fresnel_reflectance(const glm::vec3& incident_ray_direction, const glm::vec3& surface_normal, const float& entity_refraction_index)
-//// The parameters has the same assumptions as for snell_refraction_direction().
-//{
-//	// Trial settings:
-//	float eta_in = 1.0f;
-//	float eta_out = entity_refraction_index;
-//	// Trial settings correction:
-//	float cos_incident = glm::dot(incident_ray_direction, surface_normal);
-//	if (cos_incident < 0)		// case 1: ray is coming from the outside
-//	{
-//		cos_incident = -cos_incident;
-//	}
-//	else	// case 2: ray is coming from the inside
-//			// Note that if cos_incident = 0 we treat the incident ray as coming from the inside, thus we return 1
-//	{
-//		std::swap(eta_in, eta_out);
-//	}
-//	float sin_refract = eta_in / eta_out * std::sqrtf(std::max(0.0f, 1 - cos_incident * cos_incident));		// Snell's law
-//	if (sin_refract > 1.0f)		// Total internal reflection
-//	{
-//		return 1.0f;
-//	}
-//	else	// Note: this is NOT Schlick¡¯s approximation, we DO consider polarization here
-//	{
-//		float cos_refract = std::sqrtf(std::max(0.0f, 1 - sin_refract * sin_refract));
-//		float R_s_sqrt = (eta_in * cos_incident - eta_out * cos_refract) / (eta_in * cos_incident + eta_out * cos_refract);
-//		float R_p_sqrt = (eta_in * cos_refract - eta_out * cos_incident) / (eta_in * cos_refract + eta_out * cos_incident);
-//		return (R_s_sqrt * R_s_sqrt + R_p_sqrt * R_p_sqrt) / 2;
-//		// See https://en.wikipedia.org/wiki/Fresnel_equations
-//	}
-//}
-//
-//glm::vec3 snell_refraction_direction(const glm::vec3& incident_ray_direction, const glm::vec3& surface_normal, const float& entity_refraction_index)
-//// Assume incident_ray_direction and surface_normal are unit vectors where the incident_ray_direction is toward to the
-//// surface evaluation point and the surface_nornal is pointing outwards.
-//// Assume we want the normal used in computation to always towards the incident ray, and want the incident vector used in
-//// computation to always originate from the surface evaluation point.
-//// The snell_refraction_direction we are returning is also a unit vector.
-//{
-//	// Trial settings:
-//	float eta_in = 1.0f;
-//	float eta_out = entity_refraction_index;
-//	glm::vec3 normal = surface_normal;
-//	// Trial settings correction:
-//	float cos_incident = glm::dot(incident_ray_direction, surface_normal);
-//	if (cos_incident < 0)		// case 1: ray is coming from the outside
-//	{
-//		cos_incident = -cos_incident;
-//	}
-//	else	// case 2: ray is coming from the inside
-//			// Note that if cos_incident = 0, we treat the incident ray as coming from the inside, thus we return 0
-//	{
-//		std::swap(eta_in, eta_out);
-//		normal = -normal;
-//	}
-//	float eta_ratio = eta_in / eta_out;
-//	float cos_refract_squared = 1 - eta_ratio * eta_ratio * (1 - cos_incident * cos_incident);
-//	return (cos_refract_squared < 0) ?
-//		(glm::vec3{0.0f, 0.0f, 0.0f}) :
-//		(eta_ratio * incident_ray_direction + (eta_ratio * cos_incident - std::sqrtf(cos_refract_squared)) * normal);
-//	// if not total internal reflection, we have:
-//	//		refraction_direction = component_parallel_to_the_normal + component_perpendicular_to_the_normal
-//}
-
-
-
-
 class CSC8599Layer : public Walnut::Layer
 {
 	float duration_per_frame = 0.0f;
 	bool real_time = false;
 	Renderer renderer;
-	Camera camera{ 35.0f, 0.1f, 100.0f };
+	Camera camera{ 90.0f, 0.1f, 100.0f };
 	uint32_t viewport_width = 0;
 	uint32_t viewport_height = 0;
 	Scene scene;

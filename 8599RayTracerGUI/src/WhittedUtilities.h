@@ -15,14 +15,9 @@
 
 namespace Whitted
 {
-	enum MaterialNature
-	{
-		Reflective,
-		Reflective_Refractive,
-		Diffuse_Glossy
-	};
-
-	#define PI 3.14159265358979323846
+	#define INTERSECTION_CORRECTION 0.00001f
+	#undef PI
+	#define PI 3.141592653589793f
 	constexpr float positive_infinity = std::numeric_limits<float>::max();
 
 	inline float get_random_float_0_1()

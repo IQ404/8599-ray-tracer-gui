@@ -8,6 +8,8 @@
 
 #include "Renderer.h"
 
+#include "TriangleMesh.h"
+
 namespace RTUtility
 {
 	uint32_t vecRGBA_to_0xABGR(const glm::vec4& colorRGBA)
@@ -19,6 +21,23 @@ namespace RTUtility
 
 		return ((a << 24) | (b << 16) | (g << 8) | r);	// this automatically promotes 8 bits memory to 32 bits memory
 	}
+}
+
+Renderer::Renderer()
+{
+	//Whitted::TriangleMesh* mesh_pointer = new Whitted::TriangleMesh("src/cube.obj");
+	Whitted::TriangleMesh* mesh_pointer = new Whitted::TriangleMesh("src/stanford_bunny.obj");
+	//Whitted::TriangleMesh* mesh_pointer = new Whitted::TriangleMesh("src/utah_teapot.obj");
+	
+	// The mesh file of the Stanford bunny is downloaded from https://graphics.stanford.edu/~mdfisher/Data/Meshes/bunny.obj
+	// The mesh file of the Utah teapot is downloaded from https://graphics.stanford.edu/courses/cs148-10-summer/as3/code/as3/teapot.obj
+
+	world.Add(mesh_pointer);
+	// TODO: the current internal logic will result in memory leak of the mesh
+	world.Add(std::make_unique<Whitted::PointLightSource>(glm::vec3(-20.0f, 70.0f, 20.0f), glm::vec3(1.0f)));
+	world.Add(std::make_unique<Whitted::PointLightSource>(glm::vec3(20.0f, 70.0f, 20.0f), glm::vec3(1.0f)));
+	
+	world.GenerateBVH();	// we should only generate BVH **once** here
 }
 
 void Renderer::ResizeViewport(uint32_t width, uint32_t height)
@@ -91,38 +110,8 @@ void Renderer::RayGen_Shader(uint32_t x, uint32_t y)
 {
 	glm::vec3 color_rgb(0.0f);
 
-	Ray ray;
-	ray.origin = active_camera->Position();
-	ray.direction = active_camera->RayDirections()[y * frame_image_final->GetWidth() + x];
+	glm::vec4 color_rgba{ world.cast_Whitted_ray(AccelerationStructure::Ray{active_camera->Position(), Whitted::normalize(active_camera->RayDirections()[y * frame_image_final->GetWidth() + x])}, 0), 1.0f };
 	
-	int bounces = 5;
-	float energy_remaining = 1.0f;
-	glm::vec3 sky_color{ 0.6f,0.7f,0.9f };
-	glm::vec3 light_direction = glm::normalize(glm::vec3{ -1.0,-1.0,-1.0 });
-	for (int i = 0; i < bounces; i++)
-	{
-		Renderer::HitRecord hit_record = Intersection_Shader(ray);
-
-		if (hit_record.hit_Distance == -1.0f)
-		{
-			color_rgb += sky_color * energy_remaining;
-			break;
-		}
-		else
-		{
-			const Sphere& sphere = active_scene->spheres[hit_record.hit_ObjectIndex];
-			const Material& material = active_scene->materials[sphere.material_index];
-			float diffuseIntensity = glm::max(glm::dot(hit_record.hit_WorldNormal, -light_direction), 0.0f);
-			color_rgb += energy_remaining * material.albedo * diffuseIntensity;	// light source emits white light
-
-			energy_remaining *= 0.5f;
-			
-			ray.origin = hit_record.hit_WorldPosition + hit_record.hit_WorldNormal * 0.0001f;	// shadow acne elimination
-			ray.direction = glm::reflect(ray.direction, hit_record.hit_WorldNormal + material.roughness * Walnut::Random::Vec3(-0.5f, 0.5f));
-		}
-	}
-
-	glm::vec4 color_rgba{ color_rgb,1.0f };
 	temporal_accumulation_frame_data[y * frame_image_final->GetWidth() + x] += color_rgba;
 	glm::vec4 final_color_RGBA = temporal_accumulation_frame_data[y * frame_image_final->GetWidth() + x] / (float)frame_accumulating;
 	final_color_RGBA = glm::clamp(final_color_RGBA, glm::vec4(0.0f), glm::vec4(1.0f));	// glm::clamp(value, min, max)
