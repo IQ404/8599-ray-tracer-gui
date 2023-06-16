@@ -19,7 +19,7 @@ class CSC8599Layer : public Walnut::Layer
 	float duration_per_frame = 0.0f;
 	bool real_time = false;
 	Renderer renderer;
-	Camera camera{ 90.0f, 0.1f, 100.0f };
+	Camera camera{ 35.0f, 0.1f, 100.0f };
 	uint32_t viewport_width = 0;
 	uint32_t viewport_height = 0;
 	Scene scene;

@@ -25,8 +25,8 @@ namespace RTUtility
 
 Renderer::Renderer()
 {
-	//Whitted::TriangleMesh* mesh_pointer = new Whitted::TriangleMesh("src/cube.obj");
-	Whitted::TriangleMesh* mesh_pointer = new Whitted::TriangleMesh("src/stanford_bunny.obj");
+	//Whitted::TriangleMesh* mesh_pointer = new Whitted::TriangleMesh("src/stanford_bunny.obj");
+	Whitted::TriangleMesh* mesh_pointer = new Whitted::TriangleMesh("src/cube.obj");
 	//Whitted::TriangleMesh* mesh_pointer = new Whitted::TriangleMesh("src/utah_teapot.obj");
 	
 	// The mesh file of the Stanford bunny is downloaded from https://graphics.stanford.edu/~mdfisher/Data/Meshes/bunny.obj
@@ -111,7 +111,6 @@ void Renderer::RayGen_Shader(uint32_t x, uint32_t y)
 	glm::vec3 color_rgb(0.0f);
 
 	glm::vec4 color_rgba{ world.cast_Whitted_ray(AccelerationStructure::Ray{active_camera->Position(), Whitted::normalize(active_camera->RayDirections()[y * frame_image_final->GetWidth() + x])}, 0), 1.0f };
-	
 	temporal_accumulation_frame_data[y * frame_image_final->GetWidth() + x] += color_rgba;
 	glm::vec4 final_color_RGBA = temporal_accumulation_frame_data[y * frame_image_final->GetWidth() + x] / (float)frame_accumulating;
 	final_color_RGBA = glm::clamp(final_color_RGBA, glm::vec4(0.0f), glm::vec4(1.0f));	// glm::clamp(value, min, max)
