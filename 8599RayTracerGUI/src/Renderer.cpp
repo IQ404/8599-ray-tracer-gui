@@ -25,9 +25,9 @@ namespace RTUtility
 
 Renderer::Renderer()
 {
-	//Whitted::TriangleMesh* mesh_pointer = new Whitted::TriangleMesh("src/stanford_bunny.obj");
+	Whitted::TriangleMesh* mesh_pointer = new Whitted::TriangleMesh("src/stanford_bunny.obj");
 	//Whitted::TriangleMesh* mesh_pointer = new Whitted::TriangleMesh("src/cube.obj");
-	Whitted::TriangleMesh* mesh_pointer = new Whitted::TriangleMesh("src/utah_teapot.obj");
+	//Whitted::TriangleMesh* mesh_pointer = new Whitted::TriangleMesh("src/utah_teapot.obj");
 	
 	// The mesh file of the Stanford bunny is downloaded from https://graphics.stanford.edu/~mdfisher/Data/Meshes/bunny.obj
 	// The mesh file of the Utah teapot is downloaded from https://graphics.stanford.edu/courses/cs148-10-summer/as3/code/as3/teapot.obj

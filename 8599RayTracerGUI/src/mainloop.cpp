@@ -130,19 +130,19 @@ public:
 
 		ImGui::Separator();
 
-		for (size_t i = 0; i < scene.materials.size(); i++)
-		{
-			ImGui::PushID(i);	// Let ImGui know that the following controls (until ImGui::PopID) are exclusive for the ith sphere
+		//for (size_t i = 0; i < scene.materials.size(); i++)
+		//{
+		//	ImGui::PushID(i);	// Let ImGui know that the following controls (until ImGui::PopID) are exclusive for the ith sphere
 
-			ImGui::Text("Sphere %i: ", i);
+		//	ImGui::Text("Sphere %i: ", i);
 
-			Material& material = scene.materials[i];
+		//	Material& material = scene.materials[i];
 
-			ImGui::DragFloat("Metallic", &material.metallic, 0.001f, 0.0f, 1.0f);
-			ImGui::DragFloat("Roughness", &material.roughness, 0.001f, 0.0f, 1.0f);
+		//	ImGui::DragFloat("Metallic", &material.metallic, 0.001f, 0.0f, 1.0f);
+		//	ImGui::DragFloat("Roughness", &material.roughness, 0.001f, 0.0f, 1.0f);
 
-			ImGui::PopID();
-		}
+		//	ImGui::PopID();
+		//}
 
 		ImGui::End();
 
