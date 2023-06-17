@@ -9,7 +9,7 @@
   - [Visual Studio 2022](https://visualstudio.com)
   - [Vulkan SDK](https://vulkan.lunarg.com/sdk/home#windows)
   
-  Then, execute `scripts/Setup.bat` after cloning the repository, this will generate the Visual Studio 2022 solution for us. Note that current implementation requires C++20 more above.
+  Then, execute `scripts/Setup.bat` after cloning the repository, this will generate the Visual Studio 2022 solution for us. Note that current implementation requires C++20 or above.
 
 ## Progression
 
