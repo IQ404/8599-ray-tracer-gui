@@ -100,9 +100,9 @@ namespace AccelerationStructure
 			}
 			// we are not at leaf node:
 			Whitted::IntersectionRecord left_part = traverse_BVH_from_node(node->left, ray);
-			Whitted::IntersectionRecord right_part = traverse_BVH_from_node(node->left, ray);
+			Whitted::IntersectionRecord right_part = traverse_BVH_from_node(node->right, ray);
 
-			return (left_part.t > right_part.t) ? (left_part) : (right_part);
+			return (left_part.t < right_part.t) ? (left_part) : (right_part);
 		}
 
 	public:		// public data members:
@@ -147,7 +147,7 @@ namespace AccelerationStructure
 				}
 				switch (AABB_of_all_centroids.longest_axis())
 				{
-				// sort from small to large (see https://cplusplus.com/reference/algorithm/sort/)
+					// sort from small to large (see https://cplusplus.com/reference/algorithm/sort/)
 				case X_axis:
 					std::sort(entities.begin(), entities.end(),
 						[](Whitted::Entity* a, Whitted::Entity* b)

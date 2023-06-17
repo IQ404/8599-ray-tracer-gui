@@ -178,27 +178,63 @@ namespace AccelerationStructure
 		// We assume there is no perfectly axis-aligned ray, so that the intersection point for each slab exists and is unique.
 		{
 			// First assume all the three components of the ray direction are positive (we will correct this later), we thus have:
-			glm::vec3 t_in = (min_slab_values - ray.m_origin) * ray_direction_reciprocal;
-			glm::vec3 t_out = (max_slab_values - ray.m_origin) * ray_direction_reciprocal;
+			//glm::vec3 t_in = (min_slab_values - ray.m_origin) * ray_direction_reciprocal;
+			//glm::vec3 t_out = (max_slab_values - ray.m_origin) * ray_direction_reciprocal;
 
-			// Correction according to the componentwise ray direction:
+			//// Correction according to the componentwise ray direction:
+			//if (ray_direction_is_negative[0])
+			//{
+			//	std::swap(t_in.x, t_out.x);
+			//}
+			//if (ray_direction_is_negative[1])
+			//{
+			//	std::swap(t_in.y, t_out.y);
+			//}
+			//if (ray_direction_is_negative[2])
+			//{
+			//	std::swap(t_in.z, t_out.z);
+			//}
+
+			//float last_in = std::max(t_in.x, std::max(t_in.y, t_in.z));
+			//float first_out = std::max(t_out.x, std::max(t_out.y, t_out.z));
+
+			//return ((last_in < first_out) && (first_out >= 0.0f));
+			//________________________________________________________________________________
+			float t_Min_x = (min_slab_values.x - ray.m_origin.x) * ray_direction_reciprocal.x;
+			float t_Min_y = (min_slab_values.y - ray.m_origin.y) * ray_direction_reciprocal.y;
+			float t_Min_z = (min_slab_values.z - ray.m_origin.z) * ray_direction_reciprocal.z;
+			float t_Max_x = (max_slab_values.x - ray.m_origin.x) * ray_direction_reciprocal.x;
+			float t_Max_y = (max_slab_values.y - ray.m_origin.y) * ray_direction_reciprocal.y;
+			float t_Max_z = (max_slab_values.z - ray.m_origin.z) * ray_direction_reciprocal.z;
+
 			if (ray_direction_is_negative[0])
 			{
-				std::swap(t_in.x, t_out.x);
+				float temp = t_Min_x;
+				t_Min_x = t_Max_x;
+				t_Max_x = temp;
 			}
+
 			if (ray_direction_is_negative[1])
 			{
-				std::swap(t_in.y, t_out.y);
+				float temp = t_Min_y;
+				t_Min_y = t_Max_y;
+				t_Max_y = temp;
 			}
+
 			if (ray_direction_is_negative[2])
 			{
-				std::swap(t_in.z, t_out.z);
+				float temp = t_Min_z;
+				t_Min_z = t_Max_z;
+				t_Max_z = temp;
 			}
 
-			float last_in = std::max(t_in.x, std::max(t_in.y, t_in.z));
-			float first_out = std::max(t_out.x, std::max(t_out.y, t_out.z));
+			float tEnter = std::max(t_Min_x, std::max(t_Min_y, t_Min_z));
+			float tExit = std::min(t_Max_x, std::min(t_Max_y, t_Max_z));
 
-			return ((last_in < first_out) && (first_out >= 0.0f));
+			if (tExit >= 0 && tEnter <= tExit)
+				return true;
+
+			return false;
 		}
 
 		/*

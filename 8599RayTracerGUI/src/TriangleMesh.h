@@ -115,7 +115,7 @@ namespace Whitted
 	public:
 		TriangleMesh(const std::string& file_path)
 		{
-			constexpr float mesh_scale = 60.0f;
+			constexpr float mesh_scale = 1.0f;
 
 			objl::Loader Robert_Smith_Loader;
 			Robert_Smith_Loader.LoadFile(file_path);
