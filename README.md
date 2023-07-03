@@ -52,3 +52,8 @@ The source code has been pushed to [this branch](https://github.com/IQ404/8599-r
 ### June 18th - 23rd 2023
 
 I will be writing an interim report on what I have done so far for the module (CSC8599).
+
+### June 24th - July 3rd 2023
+
+I was travelling to London during this period.
+
