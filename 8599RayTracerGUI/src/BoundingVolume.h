@@ -199,41 +199,43 @@ namespace AccelerationStructure
 			//float first_out = std::max(t_out.x, std::max(t_out.y, t_out.z));
 
 			//return ((last_in < first_out) && (first_out >= 0.0f));
+			
 			//________________________________________________________________________________
-			float t_Min_x = (min_slab_values.x - ray.m_origin.x) * ray_direction_reciprocal.x;
-			float t_Min_y = (min_slab_values.y - ray.m_origin.y) * ray_direction_reciprocal.y;
-			float t_Min_z = (min_slab_values.z - ray.m_origin.z) * ray_direction_reciprocal.z;
-			float t_Max_x = (max_slab_values.x - ray.m_origin.x) * ray_direction_reciprocal.x;
-			float t_Max_y = (max_slab_values.y - ray.m_origin.y) * ray_direction_reciprocal.y;
-			float t_Max_z = (max_slab_values.z - ray.m_origin.z) * ray_direction_reciprocal.z;
+			
+			float t_in_x = (min_slab_values.x - ray.m_origin.x) * ray_direction_reciprocal.x;
+			float t_in_y = (min_slab_values.y - ray.m_origin.y) * ray_direction_reciprocal.y;
+			float t_in_z = (min_slab_values.z - ray.m_origin.z) * ray_direction_reciprocal.z;
+
+			float t_out_x = (max_slab_values.x - ray.m_origin.x) * ray_direction_reciprocal.x;
+			float t_out_y = (max_slab_values.y - ray.m_origin.y) * ray_direction_reciprocal.y;
+			float t_out_z = (max_slab_values.z - ray.m_origin.z) * ray_direction_reciprocal.z;
 
 			if (ray_direction_is_negative[0])
 			{
-				float temp = t_Min_x;
-				t_Min_x = t_Max_x;
-				t_Max_x = temp;
+				float swap = t_in_x;
+				t_in_x = t_out_x;
+				t_out_x = swap;
 			}
-
 			if (ray_direction_is_negative[1])
 			{
-				float temp = t_Min_y;
-				t_Min_y = t_Max_y;
-				t_Max_y = temp;
+				float swap = t_in_y;
+				t_in_y = t_out_y;
+				t_out_y = swap;
 			}
-
 			if (ray_direction_is_negative[2])
 			{
-				float temp = t_Min_z;
-				t_Min_z = t_Max_z;
-				t_Max_z = temp;
+				float swap = t_in_z;
+				t_in_z = t_out_z;
+				t_out_z = swap;
 			}
 
-			float tEnter = std::max(t_Min_x, std::max(t_Min_y, t_Min_z));
-			float tExit = std::min(t_Max_x, std::min(t_Max_y, t_Max_z));
+			float t_in = std::max(t_in_x, std::max(t_in_y, t_in_z));
+			float t_out = std::min(t_out_x, std::min(t_out_y, t_out_z));
 
-			if (tExit >= 0 && tEnter <= tExit)
+			if (t_out >= 0 && t_in <= t_out)
+			{
 				return true;
-
+			}
 			return false;
 		}
 
