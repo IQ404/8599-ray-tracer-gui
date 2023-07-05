@@ -95,13 +95,6 @@ public:
 
 		ImGui::Begin("Control Panel");
 
-		/*glm::vec3 inci = glm::normalize(glm::vec3{2.0f, -1.0f, 0.0f});
-		glm::vec3 inci_re = glm::normalize(-snell_refraction_direction(inci, glm::vec3{0.0f, 1.0f, 0.0f}, 1.5f));
-		float T_in = 1 - tr_accurate_fresnel_reflectance(inci, glm::vec3{0.0f, 1.0f, 0.0f}, 1.5f);
-		float T_out = 1 - tr_accurate_fresnel_reflectance(inci_re, glm::vec3{0.0f, 1.0f, 0.0f}, 1.5f);
-		std::cout << (T_in) << std::endl;
-		std::cout << (T_out) << std::endl;*/
-
 		ImGui::Text("%.0f FPS", 1000.0f/duration_per_frame);	// Note that this will print inf if duration_per_frame == 0
 		ImGui::Text("%.0f ms", duration_per_frame);
 
