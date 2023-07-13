@@ -13,6 +13,7 @@
 #include <glm/gtx/quaternion.hpp>	// to use glm::rotate
 
 #include "Walnut/Input/Input.h"
+#include "Walnut/Random.h"
 
 Camera::Camera(float verticalFOV, float NearClipPlaneDistance, float FarClipPlaneDistance)
 	: vertical_FOV{ verticalFOV }, near_clip_plane_distance{ NearClipPlaneDistance }, far_clip_plane_distance{ FarClipPlaneDistance }
@@ -22,6 +23,9 @@ Camera::Camera(float verticalFOV, float NearClipPlaneDistance, float FarClipPlan
 
 bool Camera::UpdateCamera(float dt)
 {
+	// now we want to recompute ray directions when we are accumulating the temporal data, since for every frame we are doing random sampling inside each pixel.
+	RecomputeViewMatrix();		// Note: order matters!
+	RecomputeRayDirections();
 
 	glm::vec2 mouse_currently_at = Walnut::Input::GetMousePosition();
 	glm::vec2 mouse_displacement = mouse_currently_at - mouse_was_at;
@@ -76,12 +80,6 @@ bool Camera::UpdateCamera(float dt)
 		forward_direction = glm::rotate(quaternion, forward_direction);
 		is_moved = true;
 	}
-	
-	if (is_moved)
-	{
-		RecomputeViewMatrix();		// Note: order matters!
-		RecomputeRayDirections();
-	}
 
 	return is_moved;
 }
@@ -115,13 +113,14 @@ void Camera::RecomputeViewMatrix()
 void Camera::RecomputeRayDirections()
 {
 	ray_directions.resize(viewport_width * viewport_height);
-	for (uint32_t y = 0; y < viewport_height; y++)		// each column
+	for (uint32_t y = 0; y < viewport_height; y++)
 	{
-		for (uint32_t x = 0; x < viewport_width; x++)		// each row
+		for (uint32_t x = 0; x < viewport_width; x++)
 		{
-			glm::vec2 coordinate{ (float)x / viewport_width, (float)y / viewport_height };		// bottom-left corner of the pixel
+			glm::vec2 coordinate{ ((float)x + Walnut::Random::Float()) / viewport_width, ((float)y + Walnut::Random::Float()) / viewport_height };		// used to be bottom-left corner of the pixel, now we want one random sampling inside each pixel for every frame.
+			//glm::vec2 coordinate{ (float)x / viewport_width, (float)y / viewport_height };		// bottom-left corner of the pixel
 			coordinate = coordinate * 2.0f - 1.0f;		// normalize to [-1,1)^2
-			
+
 			// Get the ray direction in world space (from the camera to the pixel on the near clip plane of the perspective projection):
 			glm::vec4 target{ inverse_projection_matrix * glm::vec4{coordinate.x, coordinate.y, 1, 1} };
 			glm::vec3 ray_direction{ glm::vec3{inverse_view_matrix * glm::vec4{glm::normalize(glm::vec3{target} / target.w),0}} };

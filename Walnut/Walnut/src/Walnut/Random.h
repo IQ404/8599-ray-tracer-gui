@@ -39,7 +39,7 @@ namespace Walnut {
 			return glm::vec3(Float() * (max - min) + min, Float() * (max - min) + min, Float() * (max - min) + min);
 		}
 
-		static glm::vec3 InUnitSphere()
+		static glm::vec3 InUnitSphere()		// We currently don't use this, because the distribution implemented is inaccurate.
 		{
 			return glm::normalize(Vec3(-1.0f, 1.0f));
 		}
