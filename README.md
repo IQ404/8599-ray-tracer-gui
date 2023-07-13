@@ -57,3 +57,6 @@ I will be writing an interim report on what I have done so far for the module (C
 
 I was travelling to London during this period.
 
+### July 4th - 14th 2023
+
+Creating the [8599 Non Physical Path Tracer](https://github.com/IQ404/8599-ray-tracer-gui/tree/non_physical_path_tracer) by integrating the [prototype](https://github.com/IQ404/8599-ray-tracer-prototype) into the [initial framework](https://github.com/IQ404/8599-ray-tracer-gui/tree/initial_framework).
